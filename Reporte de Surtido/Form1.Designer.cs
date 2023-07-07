@@ -25,24 +25,25 @@
             FlowLayoutPanel1 = new FlowLayoutPanel();
             Pb_Cerrar = new PictureBox();
             label1 = new Label();
-            tabControl1 = new TabControl();
+            TabIniciar = new TabControl();
             tabPage1 = new TabPage();
             Data_Kardex = new DataGridView();
             Folio = new DataGridViewTextBoxColumn();
             Surtidor = new DataGridViewTextBoxColumn();
-            Importe = new DataGridViewTextBoxColumn();
             HoraInicio = new DataGridViewTextBoxColumn();
+            Importe = new DataGridViewTextBoxColumn();
             BtnIniciar = new Button();
             TxtFolio = new TextBox();
             pictureBox1 = new PictureBox();
             Cb_Surtidor = new ComboBox();
             tabPage2 = new TabPage();
+            label2 = new Label();
             pictureBox2 = new PictureBox();
             BtnTerminar = new Button();
             TxtFolio2 = new TextBox();
             FlowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).BeginInit();
-            tabControl1.SuspendLayout();
+            TabIniciar.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Data_Kardex).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -53,7 +54,7 @@
             // FlowLayoutPanel1
             // 
             FlowLayoutPanel1.Anchor = AnchorStyles.Top;
-            FlowLayoutPanel1.BackColor = Color.Black;
+            FlowLayoutPanel1.BackColor = Color.SteelBlue;
             FlowLayoutPanel1.Controls.Add(Pb_Cerrar);
             FlowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
             FlowLayoutPanel1.Location = new Point(-3, 1);
@@ -67,7 +68,7 @@
             // Pb_Cerrar
             // 
             Pb_Cerrar.Anchor = AnchorStyles.Top;
-            Pb_Cerrar.BackColor = Color.DimGray;
+            Pb_Cerrar.BackColor = Color.SteelBlue;
             Pb_Cerrar.Cursor = Cursors.Hand;
             Pb_Cerrar.Image = (Image)resources.GetObject("Pb_Cerrar.Image");
             Pb_Cerrar.Location = new Point(962, 3);
@@ -83,24 +84,24 @@
             label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Wildcard", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.ForeColor = SystemColors.Control;
-            label1.Location = new Point(333, 623);
+            label1.Font = new Font("SPIDER-MAN:ECLIPSE", 11.999999F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(38, 617);
             label1.Name = "label1";
-            label1.Size = new Size(329, 15);
+            label1.Size = new Size(307, 20);
             label1.TabIndex = 1;
             label1.Text = "Developed by Atzin Not Found";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // tabControl1
+            // TabIniciar
             // 
-            tabControl1.Controls.Add(tabPage1);
-            tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(12, 48);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(984, 669);
-            tabControl1.TabIndex = 1;
+            TabIniciar.Controls.Add(tabPage1);
+            TabIniciar.Controls.Add(tabPage2);
+            TabIniciar.Location = new Point(12, 48);
+            TabIniciar.Name = "TabIniciar";
+            TabIniciar.SelectedIndex = 0;
+            TabIniciar.Size = new Size(984, 669);
+            TabIniciar.TabIndex = 1;
             // 
             // tabPage1
             // 
@@ -111,7 +112,7 @@
             tabPage1.Controls.Add(pictureBox1);
             tabPage1.Controls.Add(Cb_Surtidor);
             tabPage1.Controls.Add(label1);
-            tabPage1.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            tabPage1.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
@@ -124,50 +125,57 @@
             Data_Kardex.AllowUserToAddRows = false;
             Data_Kardex.AllowUserToDeleteRows = false;
             Data_Kardex.AllowUserToOrderColumns = true;
+            Data_Kardex.AllowUserToResizeColumns = false;
+            Data_Kardex.AllowUserToResizeRows = false;
             Data_Kardex.Anchor = AnchorStyles.Top;
+            Data_Kardex.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            Data_Kardex.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            Data_Kardex.BackgroundColor = Color.DimGray;
             Data_Kardex.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             Data_Kardex.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            Data_Kardex.Columns.AddRange(new DataGridViewColumn[] { Folio, Surtidor, Importe, HoraInicio });
+            Data_Kardex.Columns.AddRange(new DataGridViewColumn[] { Folio, Surtidor, HoraInicio, Importe });
             Data_Kardex.EditMode = DataGridViewEditMode.EditProgrammatically;
             Data_Kardex.EnableHeadersVisualStyles = false;
+            Data_Kardex.GridColor = Color.Blue;
             Data_Kardex.Location = new Point(38, 257);
             Data_Kardex.Name = "Data_Kardex";
             Data_Kardex.ReadOnly = true;
             Data_Kardex.RowHeadersVisible = false;
-            Data_Kardex.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             Data_Kardex.RowTemplate.Height = 25;
             Data_Kardex.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            Data_Kardex.Size = new Size(904, 182);
+            Data_Kardex.Size = new Size(888, 347);
             Data_Kardex.TabIndex = 0;
             Data_Kardex.TabStop = false;
             // 
             // Folio
             // 
+            Folio.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             Folio.HeaderText = "Folio";
             Folio.Name = "Folio";
             Folio.ReadOnly = true;
-            Folio.Width = 200;
+            Folio.Width = 150;
             // 
             // Surtidor
             // 
+            Surtidor.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             Surtidor.HeaderText = "Surtidor";
             Surtidor.Name = "Surtidor";
             Surtidor.ReadOnly = true;
             Surtidor.Width = 400;
+            // 
+            // HoraInicio
+            // 
+            HoraInicio.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            HoraInicio.HeaderText = "Hora de Inicio";
+            HoraInicio.Name = "HoraInicio";
+            HoraInicio.ReadOnly = true;
+            HoraInicio.Width = 200;
             // 
             // Importe
             // 
             Importe.HeaderText = "Importe";
             Importe.Name = "Importe";
             Importe.ReadOnly = true;
-            Importe.Width = 150;
-            // 
-            // HoraInicio
-            // 
-            HoraInicio.HeaderText = "Hora de Inicio";
-            HoraInicio.Name = "HoraInicio";
-            HoraInicio.ReadOnly = true;
-            HoraInicio.Width = 150;
             // 
             // BtnIniciar
             // 
@@ -176,7 +184,7 @@
             BtnIniciar.Cursor = Cursors.Hand;
             BtnIniciar.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
             BtnIniciar.ForeColor = Color.Black;
-            BtnIniciar.Location = new Point(758, 168);
+            BtnIniciar.Location = new Point(762, 156);
             BtnIniciar.Name = "BtnIniciar";
             BtnIniciar.Size = new Size(184, 68);
             BtnIniciar.TabIndex = 3;
@@ -206,7 +214,7 @@
             pictureBox1.Anchor = AnchorStyles.Top;
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(276, 6);
+            pictureBox1.Location = new Point(265, 6);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(445, 113);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -233,6 +241,7 @@
             // tabPage2
             // 
             tabPage2.BackColor = Color.DimGray;
+            tabPage2.Controls.Add(label2);
             tabPage2.Controls.Add(pictureBox2);
             tabPage2.Controls.Add(BtnTerminar);
             tabPage2.Controls.Add(TxtFolio2);
@@ -244,12 +253,26 @@
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Finalizar";
             // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Top;
+            label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("SPIDER-MAN:ECLIPSE", 11.999999F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(663, 609);
+            label2.Name = "label2";
+            label2.Size = new Size(307, 20);
+            label2.TabIndex = 18;
+            label2.Text = "Developed by Atzin Not Found";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // pictureBox2
             // 
             pictureBox2.Anchor = AnchorStyles.Top;
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(279, 21);
+            pictureBox2.Location = new Point(265, 6);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(445, 113);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
@@ -292,14 +315,15 @@
             // 
             BackColor = Color.DimGray;
             ClientSize = new Size(1008, 729);
-            Controls.Add(tabControl1);
+            Controls.Add(TabIniciar);
             Controls.Add(FlowLayoutPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
+            Load += Form1_Load;
             FlowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).EndInit();
-            tabControl1.ResumeLayout(false);
+            TabIniciar.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Data_Kardex).EndInit();
@@ -310,7 +334,7 @@
             ResumeLayout(false);
         }
 
-        private TabControl tabControl1;
+        private TabControl TabIniciar;
         private TabPage tabPage1;
         private TabPage tabPage2;
         private PictureBox Pb_Cerrar;
@@ -326,7 +350,8 @@
         private TextBox TxtFolio2;
         private DataGridViewTextBoxColumn Folio;
         private DataGridViewTextBoxColumn Surtidor;
-        private DataGridViewTextBoxColumn Importe;
         private DataGridViewTextBoxColumn HoraInicio;
+        private DataGridViewTextBoxColumn Importe;
+        private Label label2;
     }
 }

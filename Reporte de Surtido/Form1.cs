@@ -1,8 +1,10 @@
+using DocumentFormat.OpenXml.Vml;
 using FirebirdSql.Data.FirebirdClient;
 using SpreadsheetLight;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Reporte_de_Surtido
 {
@@ -12,7 +14,9 @@ namespace Reporte_de_Surtido
         string Buscar_Folio;
         string oficial_surtidor;
         decimal oficial_importe = 0;
+        decimal current_importe =0;
         string oficial_id;
+        string current_surtidor;
         int oficial_contador;
         private bool isDragging = false;
         private Point dragStart;
@@ -38,10 +42,82 @@ namespace Reporte_de_Surtido
             Cb_Surtidor.AutoCompleteCustomSource.AddRange(nombres.ToArray());
             Cb_Surtidor.Text = "";
         }
+        void Promedio()
+        {
+            string rutaArchivo = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+            SLDocument sl = new SLDocument(rutaArchivo);
+            // Agregar una nueva hoja
+            sl.AddWorksheet("Promedio");
+            sl.SetCellValue("A1", "SURTIDOR");
+            sl.SetCellValue("B1", "IMPORTE GENERADO");
+            sl.SetCellValue("C1", "IMPORTE TOTAL");
+            sl.SelectWorksheet("Promedio");
+            int i = 2;
+            bool Encontrar = false;
+            while (sl.HasCellValue("A" + i)){
+                if(sl.GetCellValueAsString(i,1) == current_surtidor)
+                {
+                    Encontrar = true;
+                    decimal imp= sl.GetCellValueAsDecimal("B" + i);
+                    decimal total = sl.GetCellValueAsDecimal("C2");
+                    sl.SetCellValue("B"+i, current_importe+imp);
+                    sl.SetCellValue("C" + 2, current_importe + total);
+                }
+                i++;
+            }
+            if(Encontrar == false)
+            {
+                decimal total = sl.GetCellValueAsDecimal("C2");
+                sl.SetCellValue("A" + i, current_surtidor);
+                decimal imp = sl.GetCellValueAsDecimal("B" + i);
+                sl.SetCellValue("B" + i, current_importe);
+                sl.SetCellValue("C" + 2, current_importe + total);
+            }
+            // Guardar el archivo con la nueva hoja agregada
+            sl.SaveAs(rutaArchivo);
+            
+
+        }
         private void BtnIniciar_Click(object sender, EventArgs e)
         {
             if (TxtFolio.Text != string.Empty && Cb_Surtidor.Text != string.Empty)
             {
+                /*
+                foreach (DataGridViewRow fila in Data_Kardex.Rows)
+                {
+                    // Obtener el valor de la columna deseada en cada fila
+                    string valorCelda = fila.Cells["Folio"].Value.ToString();
+                    if (valorCelda == TxtFolio.Text)
+                    {
+                        // El dato ya existe en el DataGridView
+                        MessageBox.Show("Ese pedido ya está iniciado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        TxtFolio.Text = string.Empty;
+                        Cb_Surtidor.Text = "";
+                        TxtFolio.Focus();
+                        return; // Salir del bucle
+                    }
+                }*/
+                string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+                bool fileExist = File.Exists(path);
+                if (fileExist)
+                {
+                    SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    sl.SelectWorksheet("Reporte Surtido");
+                    int i = 1;
+                    Inicio = DateTime.Now.ToLongTimeString();
+                    while (sl.HasCellValue("B" + i))
+                    {
+                        if (sl.GetCellValueAsString("B" + i) == TxtFolio.Text)
+                        {
+                            MessageBox.Show("Ese pedido ya está iniciado o terminado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            TxtFolio.Text = string.Empty;
+                            Cb_Surtidor.Text = "";
+                            TxtFolio.Focus();
+                            return;
+                        }
+                        i++;
+                    }
+                }
                 FbConnection con = new FbConnection("User=SYSDBA;" + "Password=C0r1b423;" + "Database=D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb;" + "DataSource=192.168.0.11;" + "Port=3050;" + "Dialect=3;" + "Charset=UTF8;");
                 try
                 {
@@ -137,7 +213,7 @@ namespace Reporte_de_Surtido
                         DataGridViewRowCollection rows = Data_Kardex.Rows;
 
                         // Agrega una nueva fila y especifica los valores de las celdas
-                        rows.Add(TxtFolio.Text, oficial_surtidor, oficial_importe, Inicio);
+                        rows.Add(TxtFolio.Text, oficial_surtidor, Inicio, oficial_importe);
 
                         TxtFolio.Text = string.Empty;
                         Cb_Surtidor.Text = string.Empty;
@@ -160,7 +236,8 @@ namespace Reporte_de_Surtido
             bool fileExist = File.Exists(path);
             if (fileExist)
             {
-                SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx", "Sheet1");
+                SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                sl.SelectWorksheet("Reporte Surtido");
                 int i = 1;
                 Inicio = DateTime.Now.ToLongTimeString();
                 while (sl.HasCellValue("A" + i))
@@ -178,11 +255,14 @@ namespace Reporte_de_Surtido
                 sl.SetCellValue("D" + i, Inicio);
                 sl.SetCellValue("E" + i, oficial_importe);
                 sl.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                
             }
             else if (!fileExist)
             {
                 Inicio = DateTime.Now.ToLongTimeString();
                 SLDocument oSLDocument = new();
+                string actual = oSLDocument.GetCurrentWorksheetName();
+                oSLDocument.RenameWorksheet(actual, "Reporte Surtido");
                 DataTable table = new();
                 table.Columns.Add("ID", typeof(int));
                 table.Columns.Add("Folio", typeof(string));
@@ -234,14 +314,24 @@ namespace Reporte_de_Surtido
                 if (fileExist)
                 {
                     bool encontrado = false;
-                    SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx", "Sheet1");
+                    SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    sl.SelectWorksheet("Reporte Surtido");
                     int i = 1;
                     while (sl.HasCellValue("B" + i))
                     {
                         if (TxtFolio2.Text == sl.GetCellValueAsString("B" + i))
                         {
+                            if (sl.GetCellValueAsString("F" + i) != string.Empty)
+                            {
+                                MessageBox.Show("Ese pedido ya está Terminado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                TxtFolio2.Text = string.Empty;
+                                TxtFolio2.Focus();
+                                return;
+                            }
                             encontrado = true;
                             sl.SetCellValue("F" + i, DateTime.Now.ToLongTimeString());
+                            current_importe = sl.GetCellValueAsDecimal(i, 5);
+                            current_surtidor = sl.GetCellValueAsString(i, 3);
                             string inicioStr = sl.GetCellValueAsString("D" + i); // Obtener el valor de la celda como cadena
                             string finStr = sl.GetCellValueAsString("F" + i); // Obtener el valor de la celda como cadena
                             DateTime inicio;
@@ -265,7 +355,7 @@ namespace Reporte_de_Surtido
                                     break; // Termina el bucle una vez que se haya eliminado la fila deseada
                                 }
                             }
-                            MessageBox.Show("Terminado con exito! \n"+"Tiempo transcurrido: "+diferencia.ToString());
+                            MessageBox.Show("Terminado con exito! \n" + "Tiempo transcurrido: " + diferencia.ToString());
                             TxtFolio2.Text = string.Empty;
                             TxtFolio2.Focus();
                             break;
@@ -283,6 +373,7 @@ namespace Reporte_de_Surtido
                         sl.SetColumnWidth(columna, 30);
                     }
                     sl.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    Promedio();
                 }
                 else if (!fileExist)
                 {
@@ -327,6 +418,32 @@ namespace Reporte_de_Surtido
         private void FlowLayoutPanel1_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+            bool fileExist = File.Exists(path);
+            if (fileExist)
+            {
+                SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                sl.SelectWorksheet("Reporte Surtido");
+                // Obtener los datos de la hoja de cálculo en un arreglo bidimensional
+                int numFilas = sl.GetWorksheetStatistics().NumberOfRows;
+                int numColumnas = 4;
+
+
+                DataGridViewRowCollection rows = Data_Kardex.Rows;
+
+                // Agrega una nueva fila y especifica los valores de las celdas
+                for (int i = 2; i <= numFilas; i++)
+                {
+                    if (sl.GetCellValueAsString(i, 6) == string.Empty)
+                    {
+                        rows.Add(sl.GetCellValueAsString(i, 2), sl.GetCellValueAsString(i, 3), sl.GetCellValueAsString(i, 4), sl.GetCellValueAsDecimal(i, 5));
+                    }
+                }
+            }
         }
     }
 }
