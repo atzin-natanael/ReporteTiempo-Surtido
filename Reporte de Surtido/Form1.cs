@@ -1,4 +1,5 @@
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml;
 using FirebirdSql.Data.FirebirdClient;
 using SpreadsheetLight;
@@ -17,7 +18,7 @@ namespace Reporte_de_Surtido
         string Buscar_Folio;
         string oficial_surtidor;
         decimal oficial_importe = 0;
-        decimal current_importe =0;
+        decimal current_importe = 0;
         string oficial_id;
         string current_surtidor;
         string current_tiempo;
@@ -54,15 +55,17 @@ namespace Reporte_de_Surtido
             // Agregar una nueva hoja
             sl.AddWorksheet("Promedio");
             sl.SelectWorksheet("Promedio");
-            int[] columnas = { 1, 2, 3, 4};
+            int[] columnas = { 1, 2, 3, 4, 5, 6 };
             foreach (int columna in columnas)
             {
                 sl.SetColumnWidth(columna, 30);
             }
             sl.SetCellValue("A1", "SURTIDOR");
-            sl.SetCellValue("B1", "IMPORTE GENERADO");
-            sl.SetCellValue("C1", "PORCENTAJE");
-            sl.SetCellValue("D1", "IMPORTE TOTAL");
+            sl.SetCellValue("B1", "PEDIDOS SURTIDOS");
+            sl.SetCellValue("C1", "IMPORTE GENERADO");
+            sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
+            sl.SetCellValue("E1", "MINUTOS EN SURTIR");
+            sl.SetCellValue("F1", "IMPORTE TOTAL");
             int i = 2;
             int j = 2;
             bool Encontrar = false;
@@ -71,54 +74,59 @@ namespace Reporte_de_Surtido
                 if (sl.GetCellValueAsString(i, 1) == current_surtidor)
                 {
                     Encontrar = true;
-                    decimal imp = sl.GetCellValueAsDecimal("B" + i);
-                    decimal total = sl.GetCellValueAsDecimal("D2");
-                    DateTime tiempo_generado = sl.GetCellValueAsDateTime("E"+i);
-                    sl.SetCellValue("B" + i, current_importe + imp);
-                    sl.SetCellValue("D" + 2, current_importe + total);
-                    total = sl.GetCellValueAsDecimal("D2");
-                    DateTime fin;
-                    if (DateTime.TryParse(current_tiempo, out fin))
+                    decimal imp = sl.GetCellValueAsDecimal("C" + i);
+                    decimal total = sl.GetCellValueAsDecimal("F2");
+                    DateTime tiempo_generado = sl.GetCellValueAsDateTime("F" + i);
+                    int pedidos = sl.GetCellValueAsInt32("B" + i);
+                    sl.SetCellValue("C" + i, current_importe + imp);
+                    sl.SetCellValue("F" + 2, current_importe + total);
+                    sl.SetCellValue("B" + i, pedidos + 1);
+                    total = sl.GetCellValueAsDecimal("F2");
+                    double tiempo = sl.GetCellValueAsDouble("E" + i);
+                    double tot = tiempo + diferencia.TotalMinutes;
+
+                    sl.SetCellValue("E" + i, tot);
+                    while (sl.HasCellValue("C" + j))
                     {
-                     //   suma = tiempo_generado.Add(inicio);
-                        sl.SetCellValue("G" + i, diferencia.ToString());
-                        current_tiempo = sl.GetCellValueAsString(i, 7);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se pudo convertir los valores de las celdas a DateTime.");
-                    }
-                    while (sl.HasCellValue("B" + j))
-                    {
-                        decimal temp_importe = sl.GetCellValueAsDecimal("B" + j);
-                        sl.SetCellValue("C" + j, 100*(temp_importe / total));
+                        decimal temp_importe = sl.GetCellValueAsDecimal("C" + j);
+                        sl.SetCellValue("D" + j, 100 * (temp_importe / total));
                         j++;
                     }
                 }
                 i++;
             }
-                if (Encontrar == false)
+            if (Encontrar == false)
+            {
+                decimal total = sl.GetCellValueAsDecimal("F2");
+                sl.SetCellValue("A" + i, current_surtidor);
+                decimal imp = sl.GetCellValueAsDecimal("C" + i);
+                sl.SetCellValue("C" + i, current_importe);
+                double tiempo = sl.GetCellValueAsDouble("E" + i);
+                double tot = tiempo + diferencia.TotalMinutes;
+                sl.SetCellValue("E" + i, tot);
+                sl.SetCellValue("F" + 2, current_importe + total);
+                total = sl.GetCellValueAsDecimal("F2");
+                int pedidos = sl.GetCellValueAsInt32("B" + i);
+                sl.SetCellValue("B" + i, pedidos + 1);
+                while (sl.HasCellValue("C" + j))
                 {
-                    decimal total = sl.GetCellValueAsDecimal("D2");
-                    sl.SetCellValue("A" + i, current_surtidor);
-                    decimal imp = sl.GetCellValueAsDecimal("B" + i);
-                    sl.SetCellValue("B" + i, current_importe);
-                    sl.SetCellValue("D" + 2, current_importe + total);
-                    total = sl.GetCellValueAsDecimal("D2");
-                    while (sl.HasCellValue("B" + j))
-                    {
-                        decimal temp_importe = sl.GetCellValueAsDecimal("B" + j);
-                        sl.SetCellValue("C" + j,100*( temp_importe / total));
+                    decimal temp_importe = sl.GetCellValueAsDecimal("C" + j);
+                    sl.SetCellValue("D" + j, 100 * (temp_importe / total));
                     j++;
 
-                    }
                 }
-
-                // Guardar el archivo con la nueva hoja agregada
-                sl.SaveAs(rutaArchivo);
-
             }
-        
+            SLSheetProtection sp = new SLSheetProtection();
+            sp.AllowInsertRows = true;
+            sp.AllowInsertColumns = false;
+            sp.AllowFormatCells = true;
+            sp.AllowDeleteColumns = true;
+            sl.ProtectWorksheet(sp);
+            // Guardar el archivo con la nueva hoja agregada
+            sl.SaveAs(rutaArchivo);
+
+        }
+
         private void BtnIniciar_Click(object sender, EventArgs e)
         {
             if (TxtFolio.Text != string.Empty && Cb_Surtidor.Text != string.Empty)
@@ -296,7 +304,7 @@ namespace Reporte_de_Surtido
                 sl.SetCellValue("D" + i, Inicio);
                 sl.SetCellValue("E" + i, oficial_importe);
                 sl.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
-                
+
             }
             else if (!fileExist)
             {
