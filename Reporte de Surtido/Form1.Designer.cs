@@ -27,6 +27,7 @@
             label1 = new Label();
             TabIniciar = new TabControl();
             tabPage1 = new TabPage();
+            Check_mantener = new CheckBox();
             Data_Kardex = new DataGridView();
             Folio = new DataGridViewTextBoxColumn();
             Surtidor = new DataGridViewTextBoxColumn();
@@ -106,6 +107,7 @@
             // tabPage1
             // 
             tabPage1.BackColor = Color.DimGray;
+            tabPage1.Controls.Add(Check_mantener);
             tabPage1.Controls.Add(Data_Kardex);
             tabPage1.Controls.Add(BtnIniciar);
             tabPage1.Controls.Add(TxtFolio);
@@ -119,6 +121,17 @@
             tabPage1.Size = new Size(976, 641);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Iniciar";
+            // 
+            // Check_mantener
+            // 
+            Check_mantener.AutoSize = true;
+            Check_mantener.Location = new Point(280, 140);
+            Check_mantener.Name = "Check_mantener";
+            Check_mantener.Size = new Size(290, 22);
+            Check_mantener.TabIndex = 14;
+            Check_mantener.Text = "Mantener nombre del surtidor";
+            Check_mantener.UseVisualStyleBackColor = true;
+            Check_mantener.CheckedChanged += Check_mantener_CheckedChanged;
             // 
             // Data_Kardex
             // 
@@ -353,5 +366,6 @@
         private DataGridViewTextBoxColumn HoraInicio;
         private DataGridViewTextBoxColumn Importe;
         private Label label2;
+        private CheckBox Check_mantener;
     }
 }

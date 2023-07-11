@@ -14,6 +14,7 @@ namespace Reporte_de_Surtido
 {
     public partial class Form1 : Form
     {
+        DateTime fechaActual = DateTime.Now;
         private List<string> nombres = new() { };
         string Buscar_Folio;
         string oficial_surtidor;
@@ -28,12 +29,38 @@ namespace Reporte_de_Surtido
         string Inicio;
         TimeSpan diferencia;
         DateTime suma;
+        string path;
         public Form1()
         {
             InitializeComponent();
+            CrearExcel();
             Leer_Datos();
             Cb_Surtidor.SelectedIndex = -1;
 
+        }
+        public void CrearExcel()
+        {
+            DateTime actual = DateTime.Now;
+            if (actual.DayOfWeek.ToString() == "Saturday")
+            {
+                path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + " a" + actual.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
+            }
+            else
+            {
+                int contador = 0;
+                int valor_dia = (int)actual.DayOfWeek;
+                for (; valor_dia >= 0; --valor_dia)
+                {
+                    contador++;
+                    if (valor_dia == 0)
+                    {
+                        valor_dia = 6;
+                        DateTime pasada = fechaActual.AddDays(-contador);
+                        path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
+                        break;
+                    }
+                }
+            }
         }
         public void Leer_Datos()
         {
@@ -50,8 +77,8 @@ namespace Reporte_de_Surtido
         }
         void Promedio()
         {
-            string rutaArchivo = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
-            SLDocument sl = new SLDocument(rutaArchivo);
+            //string rutaArchivo = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+            SLDocument sl = new SLDocument(path);
             // Agregar una nueva hoja
             sl.AddWorksheet("Promedio");
             sl.SelectWorksheet("Promedio");
@@ -123,7 +150,7 @@ namespace Reporte_de_Surtido
             sp.AllowDeleteColumns = true;
             sl.ProtectWorksheet(sp);
             // Guardar el archivo con la nueva hoja agregada
-            sl.SaveAs(rutaArchivo);
+            sl.SaveAs(path);
 
         }
 
@@ -146,11 +173,11 @@ namespace Reporte_de_Surtido
                         return; // Salir del bucle
                     }
                 }*/
-                string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+                //string path = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
                 bool fileExist = File.Exists(path);
                 if (fileExist)
                 {
-                    SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    SLDocument sl = new(path);
                     sl.SelectWorksheet("Reporte Surtido");
                     int i = 1;
                     Inicio = DateTime.Now.ToLongTimeString();
@@ -265,7 +292,8 @@ namespace Reporte_de_Surtido
                         rows.Add(TxtFolio.Text, oficial_surtidor, Inicio, oficial_importe);
 
                         TxtFolio.Text = string.Empty;
-                        Cb_Surtidor.Text = string.Empty;
+                        if (!Check_mantener.Checked)
+                            Cb_Surtidor.Text = string.Empty;
                         TxtFolio.Focus();
                     }
                 }
@@ -281,11 +309,11 @@ namespace Reporte_de_Surtido
         }
         public void Excel()
         {
-            string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+            // string path = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
             bool fileExist = File.Exists(path);
             if (fileExist)
             {
-                SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                SLDocument sl = new(path);
                 sl.SelectWorksheet("Reporte Surtido");
                 int i = 1;
                 Inicio = DateTime.Now.ToLongTimeString();
@@ -303,7 +331,7 @@ namespace Reporte_de_Surtido
                 sl.SetCellValue("C" + i, Cb_Surtidor.Text);
                 sl.SetCellValue("D" + i, Inicio);
                 sl.SetCellValue("E" + i, oficial_importe);
-                sl.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                sl.SaveAs(path);
 
             }
             else if (!fileExist)
@@ -322,7 +350,7 @@ namespace Reporte_de_Surtido
                 table.Columns.Add("Duracion", typeof(string));
                 table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "");
                 oSLDocument.ImportDataTable(1, 1, table, true);
-                oSLDocument.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                oSLDocument.SaveAs(path);
             }
         }
 
@@ -358,12 +386,12 @@ namespace Reporte_de_Surtido
         {
             if (TxtFolio2.Text != string.Empty)
             {
-                string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+                //string path = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
                 bool fileExist = File.Exists(path);
                 if (fileExist)
                 {
                     bool encontrado = false;
-                    SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    SLDocument sl = new(path);
                     sl.SelectWorksheet("Reporte Surtido");
                     int i = 1;
                     while (sl.HasCellValue("B" + i))
@@ -422,7 +450,7 @@ namespace Reporte_de_Surtido
                     {
                         sl.SetColumnWidth(columna, 30);
                     }
-                    sl.SaveAs("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                    sl.SaveAs(path);
                     Promedio();
                 }
                 else if (!fileExist)
@@ -472,16 +500,14 @@ namespace Reporte_de_Surtido
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
+            // string path = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
             bool fileExist = File.Exists(path);
             if (fileExist)
             {
-                SLDocument sl = new("C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx");
+                SLDocument sl = new(path);
                 sl.SelectWorksheet("Reporte Surtido");
                 // Obtener los datos de la hoja de cálculo en un arreglo bidimensional
                 int numFilas = sl.GetWorksheetStatistics().NumberOfRows;
-                int numColumnas = 4;
-
 
                 DataGridViewRowCollection rows = Data_Kardex.Rows;
 
@@ -493,6 +519,14 @@ namespace Reporte_de_Surtido
                         rows.Add(sl.GetCellValueAsString(i, 2), sl.GetCellValueAsString(i, 3), sl.GetCellValueAsString(i, 4), sl.GetCellValueAsDecimal(i, 5));
                     }
                 }
+            }
+        }
+
+        private void Check_mantener_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Check_mantener.Checked)
+            {
+                Cb_Surtidor.Text = "";
             }
         }
     }
