@@ -41,7 +41,7 @@ namespace Reporte_de_Surtido
         public void CrearExcel()
         {
             DateTime actual = DateTime.Now;
-            if (actual.DayOfWeek.ToString() == "Saturday")
+            if (actual.DayOfWeek.ToString() == "Thursday")
             {
                 path = "C:\\Datos_Surtido\\Registro de Surtidores" + DateTime.Now.ToString(" yyyy-MM-dd") + " a" + actual.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
             }
@@ -52,12 +52,35 @@ namespace Reporte_de_Surtido
                 for (; valor_dia >= 0; --valor_dia)
                 {
                     contador++;
-                    if (valor_dia == 0)
+                    if (valor_dia <=3 && valor_dia == 0)
                     {
-                        valor_dia = 6;
+                        contador += 2;
                         DateTime pasada = fechaActual.AddDays(-contador);
                         path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
                         break;
+                    }
+                    if(valor_dia > 4)
+                    {
+                        if(valor_dia == 5)
+                        {
+                            DateTime pasada = fechaActual.AddDays(-contador);
+                            path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
+                            break;
+                        }
+                        if( valor_dia == 6)
+                        {
+                            contador += 1;
+                            DateTime pasada = fechaActual.AddDays(-contador);
+                            path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
+                            break;
+                        }
+                        if (valor_dia == 7)
+                        {
+                            contador += 2   ;
+                            DateTime pasada = fechaActual.AddDays(-contador);
+                            path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
+                            break;
+                        }
                     }
                 }
             }
@@ -249,6 +272,7 @@ namespace Reporte_de_Surtido
                         if (encontrado == false)
                         {
                             MessageBox.Show("FOLIO NO ENCONTRADO", "¡ERROR!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            TxtFolio.Focus();
                             return;
                         }
                         reader0.Close();
@@ -305,6 +329,7 @@ namespace Reporte_de_Surtido
             else
             {
                 MessageBox.Show("Aún no has llenado todos los campos", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TxtFolio.Focus();
             }
         }
         public void Excel()
@@ -321,7 +346,7 @@ namespace Reporte_de_Surtido
                 {
                     i++;
                 }
-                int[] columnas = { 1, 2, 3, 4, 5, 6, 7 };
+                int[] columnas = { 1, 2, 3, 4, 5, 6, 7 ,8};
                 foreach (int columna in columnas)
                 {
                     sl.SetColumnWidth(columna, 30);
@@ -331,6 +356,7 @@ namespace Reporte_de_Surtido
                 sl.SetCellValue("C" + i, Cb_Surtidor.Text);
                 sl.SetCellValue("D" + i, Inicio);
                 sl.SetCellValue("E" + i, oficial_importe);
+                sl.SetCellValue("H" + i, DateTime.Now.ToString(" yyyy-MM-dd"));
                 sl.SaveAs(path);
 
             }
@@ -348,7 +374,8 @@ namespace Reporte_de_Surtido
                 table.Columns.Add("Importe", typeof(decimal));
                 table.Columns.Add("Hora Fin", typeof(string));
                 table.Columns.Add("Duracion", typeof(string));
-                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "");
+                table.Columns.Add("Fecha", typeof (string));
+                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "", DateTime.Now.ToString(" yyyy-MM-dd"));
                 oSLDocument.ImportDataTable(1, 1, table, true);
                 oSLDocument.SaveAs(path);
             }
@@ -463,6 +490,7 @@ namespace Reporte_de_Surtido
             else
             {
                 MessageBox.Show("Aún no has llenado todos los campos", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TxtFolio2.Focus();
             }
 
         }
