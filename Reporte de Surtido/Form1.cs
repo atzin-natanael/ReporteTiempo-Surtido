@@ -35,6 +35,7 @@ namespace Reporte_de_Surtido
             InitializeComponent();
             CrearExcel();
             Leer_Datos();
+            TxtFolio.Select();
             Cb_Surtidor.SelectedIndex = -1;
 
         }
@@ -52,22 +53,22 @@ namespace Reporte_de_Surtido
                 for (; valor_dia >= 0; --valor_dia)
                 {
                     contador++;
-                    if (valor_dia <=3 && valor_dia == 0)
+                    if (valor_dia <= 3 && valor_dia == 0)
                     {
                         contador += 2;
                         DateTime pasada = fechaActual.AddDays(-contador);
                         path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
                         break;
                     }
-                    if(valor_dia > 4)
+                    if (valor_dia > 4)
                     {
-                        if(valor_dia == 5)
+                        if (valor_dia == 5)
                         {
                             DateTime pasada = fechaActual.AddDays(-contador);
                             path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
                             break;
                         }
-                        if( valor_dia == 6)
+                        if (valor_dia == 6)
                         {
                             contador += 1;
                             DateTime pasada = fechaActual.AddDays(-contador);
@@ -76,7 +77,7 @@ namespace Reporte_de_Surtido
                         }
                         if (valor_dia == 7)
                         {
-                            contador += 2   ;
+                            contador += 2;
                             DateTime pasada = fechaActual.AddDays(-contador);
                             path = "C:\\Datos_Surtido\\Registro de Surtidores" + pasada.ToString(" yyyy-MM-dd") + " a" + pasada.AddDays(6).ToString(" yyyy-MM-dd") + ".xlsx";
                             break;
@@ -346,7 +347,7 @@ namespace Reporte_de_Surtido
                 {
                     i++;
                 }
-                int[] columnas = { 1, 2, 3, 4, 5, 6, 7 ,8};
+                int[] columnas = { 1, 2, 3, 4, 5, 6, 7, 8 };
                 foreach (int columna in columnas)
                 {
                     sl.SetColumnWidth(columna, 30);
@@ -374,7 +375,7 @@ namespace Reporte_de_Surtido
                 table.Columns.Add("Importe", typeof(decimal));
                 table.Columns.Add("Hora Fin", typeof(string));
                 table.Columns.Add("Duracion", typeof(string));
-                table.Columns.Add("Fecha", typeof (string));
+                table.Columns.Add("Fecha", typeof(string));
                 table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "", DateTime.Now.ToString(" yyyy-MM-dd"));
                 oSLDocument.ImportDataTable(1, 1, table, true);
                 oSLDocument.SaveAs(path);
@@ -555,6 +556,38 @@ namespace Reporte_de_Surtido
             if (!Check_mantener.Checked)
             {
                 Cb_Surtidor.Text = "";
+            }
+        }
+
+        private void TabIniciar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabPage1.Focus())
+            {
+                tabPage1.Controls.Add(Data_Kardex);
+                TxtFolio.Focus();
+            }
+            if (tabPage2.Focus())
+            {
+                tabPage2.Controls.Add(Data_Kardex);
+                TxtFolio2.Focus();
+            }
+        }
+
+        private void Cb_Surtidor_Leave(object sender, EventArgs e)
+        {
+            if (!nombres.Contains(Cb_Surtidor.Text) && Cb_Surtidor.Text != "")
+            {
+                MessageBox.Show("Ese surtidor no está registrado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Cb_Surtidor.Text = "";
+                Cb_Surtidor.Focus();
+            }
+        }
+
+        private void Cb_Surtidor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsLower(e.KeyChar))
+            {
+                e.KeyChar = Char.ToUpper(e.KeyChar);
             }
         }
     }

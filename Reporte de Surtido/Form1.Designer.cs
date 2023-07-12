@@ -103,6 +103,7 @@
             TabIniciar.SelectedIndex = 0;
             TabIniciar.Size = new Size(984, 669);
             TabIniciar.TabIndex = 1;
+            TabIniciar.SelectedIndexChanged += TabIniciar_SelectedIndexChanged;
             // 
             // tabPage1
             // 
@@ -250,6 +251,8 @@
             Cb_Surtidor.Size = new Size(439, 31);
             Cb_Surtidor.TabIndex = 2;
             Cb_Surtidor.KeyDown += Cb_Surtidor_KeyDown;
+            Cb_Surtidor.KeyPress += Cb_Surtidor_KeyPress;
+            Cb_Surtidor.Leave += Cb_Surtidor_Leave;
             // 
             // tabPage2
             // 
@@ -273,7 +276,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("SPIDER-MAN:ECLIPSE", 11.999999F, FontStyle.Regular, GraphicsUnit.Point);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(663, 609);
+            label2.Location = new Point(663, 618);
             label2.Name = "label2";
             label2.Size = new Size(307, 20);
             label2.TabIndex = 18;
@@ -299,7 +302,7 @@
             BtnTerminar.Cursor = Cursors.Hand;
             BtnTerminar.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
             BtnTerminar.ForeColor = Color.Black;
-            BtnTerminar.Location = new Point(571, 208);
+            BtnTerminar.Location = new Point(556, 134);
             BtnTerminar.Name = "BtnTerminar";
             BtnTerminar.Size = new Size(184, 68);
             BtnTerminar.TabIndex = 16;
@@ -314,7 +317,7 @@
             TxtFolio2.CharacterCasing = CharacterCasing.Upper;
             TxtFolio2.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
             TxtFolio2.ForeColor = Color.Black;
-            TxtFolio2.Location = new Point(257, 227);
+            TxtFolio2.Location = new Point(294, 166);
             TxtFolio2.MaxLength = 9;
             TxtFolio2.Multiline = true;
             TxtFolio2.Name = "TxtFolio2";
