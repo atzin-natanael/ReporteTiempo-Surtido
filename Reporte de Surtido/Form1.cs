@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FirebirdSql.Data.FirebirdClient;
 using SpreadsheetLight;
 using System;
@@ -277,7 +278,22 @@ namespace Reporte_de_Surtido
                             return;
                         }
                         reader0.Close();
+                        FbCommand command = new FbCommand("SELECT * FROM CALC_TOTALES_DOCTO_VE", con);
+                        command.CommandType = CommandType.StoredProcedure;
+                        FbDataReader reader99 = command.ExecuteReader();
+
+                        // Leer los datos del resultado si es necesario
+                        while (reader99.Read())
+                        {
+                            // Acceder a los valores de las columnas por su índice o nombre
+                            string columna1 = reader99.GetString(0);
+                            MessageBox.Show(columna1);
+
+                            // Hacer algo con los valores leídos
+                        }
+                        reader99.Close();
                         /*
+                         *
                         string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
                         //string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
                         FbCommand command = new FbCommand(query, con);
@@ -589,6 +605,11 @@ namespace Reporte_de_Surtido
             {
                 e.KeyChar = Char.ToUpper(e.KeyChar);
             }
+        }
+
+        private void Pb_Min_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }

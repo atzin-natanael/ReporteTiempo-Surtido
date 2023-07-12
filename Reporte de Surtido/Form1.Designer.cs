@@ -24,6 +24,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             FlowLayoutPanel1 = new FlowLayoutPanel();
             Pb_Cerrar = new PictureBox();
+            Pb_Min = new PictureBox();
             label1 = new Label();
             TabIniciar = new TabControl();
             tabPage1 = new TabPage();
@@ -44,6 +45,7 @@
             TxtFolio2 = new TextBox();
             FlowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Pb_Min).BeginInit();
             TabIniciar.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Data_Kardex).BeginInit();
@@ -57,6 +59,7 @@
             FlowLayoutPanel1.Anchor = AnchorStyles.Top;
             FlowLayoutPanel1.BackColor = Color.SteelBlue;
             FlowLayoutPanel1.Controls.Add(Pb_Cerrar);
+            FlowLayoutPanel1.Controls.Add(Pb_Min);
             FlowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
             FlowLayoutPanel1.Location = new Point(-3, 1);
             FlowLayoutPanel1.Name = "FlowLayoutPanel1";
@@ -79,6 +82,20 @@
             Pb_Cerrar.TabIndex = 0;
             Pb_Cerrar.TabStop = false;
             Pb_Cerrar.Click += Pb_Cerrar_Click;
+            // 
+            // Pb_Min
+            // 
+            Pb_Min.Anchor = AnchorStyles.Top;
+            Pb_Min.BackColor = Color.SteelBlue;
+            Pb_Min.Cursor = Cursors.Hand;
+            Pb_Min.Image = (Image)resources.GetObject("Pb_Min.Image");
+            Pb_Min.Location = new Point(923, 3);
+            Pb_Min.Name = "Pb_Min";
+            Pb_Min.Size = new Size(33, 31);
+            Pb_Min.SizeMode = PictureBoxSizeMode.StretchImage;
+            Pb_Min.TabIndex = 1;
+            Pb_Min.TabStop = false;
+            Pb_Min.Click += Pb_Min_Click;
             // 
             // label1
             // 
@@ -339,6 +356,7 @@
             Load += Form1_Load;
             FlowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Pb_Min).EndInit();
             TabIniciar.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -370,5 +388,6 @@
         private DataGridViewTextBoxColumn Importe;
         private Label label2;
         private CheckBox Check_mantener;
+        private PictureBox Pb_Min;
     }
 }
