@@ -289,7 +289,7 @@ namespace Reporte_de_Surtido
                         // Parámetro V_SOLO_LECTURA
                         FbParameter paramV_SOLO_LECTURA = new FbParameter("V_SOLO_LECTURA", FbDbType.Char);
                         paramV_SOLO_LECTURA.Size = 1;
-                        paramV_SOLO_LECTURA.Value = 1;
+                        paramV_SOLO_LECTURA.Value = 'S';
                         command.Parameters.Add(paramV_SOLO_LECTURA);
 
                         // Parámetro de retorno NUM_RENGLONES
