@@ -278,53 +278,75 @@ namespace Reporte_de_Surtido
                             return;
                         }
                         reader0.Close();
-                        FbCommand command = new FbCommand("SELECT * FROM CALC_TOTALES_DOCTO_VE", con);
+                        FbCommand command = new FbCommand("CALC_TOTALES_DOCTO_VE", con);
                         command.CommandType = CommandType.StoredProcedure;
-                        FbDataReader reader99 = command.ExecuteReader();
 
-                        // Leer los datos del resultado si es necesario
-                        while (reader99.Read())
-                        {
-                            // Acceder a los valores de las columnas por su índice o nombre
-                            string columna1 = reader99.GetString(0);
-                            MessageBox.Show(columna1);
+                        // Parámetro V_DOCTO_VE_ID
+                        FbParameter paramV_DOCTO_VE_ID = new FbParameter("V_DOCTO_VE_ID", FbDbType.Integer);
+                        paramV_DOCTO_VE_ID.Value = oficial_id;
+                        command.Parameters.Add(paramV_DOCTO_VE_ID);
 
-                            // Hacer algo con los valores leídos
-                        }
-                        reader99.Close();
+                        // Parámetro V_SOLO_LECTURA
+                        FbParameter paramV_SOLO_LECTURA = new FbParameter("V_SOLO_LECTURA", FbDbType.Char);
+                        paramV_SOLO_LECTURA.Size = 1;
+                        paramV_SOLO_LECTURA.Value = 1;
+                        command.Parameters.Add(paramV_SOLO_LECTURA);
+
+                        // Parámetro de retorno NUM_RENGLONES
+                        FbParameter paramNUM_RENGLONES = new FbParameter();
+                        paramNUM_RENGLONES.ParameterName = "NUM_RENGLONES";
+                        paramNUM_RENGLONES.Direction = ParameterDirection.Output;
+                        paramNUM_RENGLONES.FbDbType = FbDbType.Integer;
+                        command.Parameters.Add(paramNUM_RENGLONES);
+
+                        // Ejecutar el procedimiento almacenado
+                        command.ExecuteNonQuery();
+
+                        // Obtener el valor de retorno NUM_RENGLONES
+                        int NUM_RENGLONES = (int)paramNUM_RENGLONES.Value;
+                        MessageBox.Show(NUM_RENGLONES.ToString());
+
+                        // Hacer algo con el valor de retorno NUM_RENGLONES
                         /*
-                         *
-                        string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
-                        //string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
-                        FbCommand command = new FbCommand(query, con);
-                        // Objeto para leer los datos obtenidos
-                        FbDataReader reader = command.ExecuteReader();
-                        encontrado = false;
-                        while (reader.Read())
-                        {
-                            string columnaid = reader.GetString(1);
-                            if (columnaid == oficial_id)
-                            {
-                                MessageBox.Show("encontrado");
-                                while (columnaid == oficial_id)
-                                {
-                                    oficial_contador = oficial_contador + 1;
-                                    //MessageBox.Show(oficial_contador.ToString());
-                                    // Mover al siguiente registro
-                                    if (!reader.Read())
-                                    {
-                                        MessageBox.Show("no encontrado");
-                                        break; // Salir del bucle si no hay más registros
-                                    }
-                                    columnaid = reader.GetString(1); // Actualizar el valor de columnaid
-                                }
-                            MessageBox.Show(oficial_contador.ToString());
-                            break;
-                            }
-                        }
-                        MessageBox.Show("No encontrado");
-                        reader.Close();
+                        FbCommand command7 = new FbCommand("CALC_TOTALES_DOCTO_VE", con);
+                        command7.CommandType = CommandType.StoredProcedure;
+                        command7.ExecuteNonQuery();
+                        DataTable dt = new DataTable();
+                        dt.Load(command7.ExecuteReader());
+                        MessageBox.Show(dt.ToString());
                         */
+                        /*
+                         string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
+                         //string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
+                         FbCommand command = new FbCommand(query, con);
+                         // Objeto para leer los datos obtenidos
+                         FbDataReader reader = command.ExecuteReader();
+                         encontrado = false;
+                         while (reader.Read())
+                         {
+                             string columnaid = reader.GetString(1);
+                             if (columnaid == oficial_id)
+                             {
+                                 MessageBox.Show("encontrado");
+                                 while (columnaid == oficial_id)
+                                 {
+                                     oficial_contador = oficial_contador + 1;
+                                     //MessageBox.Show(oficial_contador.ToString());
+                                     // Mover al siguiente registro
+                                     if (!reader.Read())
+                                     {
+                                         MessageBox.Show("no encontrado");
+                                         break; // Salir del bucle si no hay más registros
+                                     }
+                                     columnaid = reader.GetString(1); // Actualizar el valor de columnaid
+                                 }
+                             MessageBox.Show(oficial_contador.ToString());
+                             break;
+                             }
+                         }
+                         MessageBox.Show("No encontrado");
+                         reader.Close();
+                         */
                         Excel();
                         // Obtén acceso a la colección de filas del control Data_Kardex
                         DataGridViewRowCollection rows = Data_Kardex.Rows;
