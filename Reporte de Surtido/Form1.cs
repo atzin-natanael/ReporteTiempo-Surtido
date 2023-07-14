@@ -24,6 +24,7 @@ namespace Reporte_de_Surtido
         string oficial_id;
         string current_surtidor;
         string current_tiempo;
+        int current_renglones;
         int oficial_contador;
         private bool isDragging = false;
         private Point dragStart;
@@ -31,6 +32,7 @@ namespace Reporte_de_Surtido
         TimeSpan diferencia;
         DateTime suma;
         string path;
+        int Num_renglones;
         public Form1()
         {
             InitializeComponent();
@@ -107,7 +109,7 @@ namespace Reporte_de_Surtido
             // Agregar una nueva hoja
             sl.AddWorksheet("Promedio");
             sl.SelectWorksheet("Promedio");
-            int[] columnas = { 1, 2, 3, 4, 5, 6 };
+            int[] columnas = { 1, 2, 3, 4, 5, 6 , 7};
             foreach (int columna in columnas)
             {
                 sl.SetColumnWidth(columna, 30);
@@ -117,7 +119,8 @@ namespace Reporte_de_Surtido
             sl.SetCellValue("C1", "IMPORTE GENERADO");
             sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
             sl.SetCellValue("E1", "MINUTOS EN SURTIR");
-            sl.SetCellValue("F1", "IMPORTE TOTAL");
+            sl.SetCellValue("F1", "RENGLONES SURTIDOS");
+            sl.SetCellValue("G1", "IMPORTE TOTAL");
             int i = 2;
             int j = 2;
             bool Encontrar = false;
@@ -127,13 +130,15 @@ namespace Reporte_de_Surtido
                 {
                     Encontrar = true;
                     decimal imp = sl.GetCellValueAsDecimal("C" + i);
-                    decimal total = sl.GetCellValueAsDecimal("F2");
-                    DateTime tiempo_generado = sl.GetCellValueAsDateTime("F" + i);
+                    decimal total = sl.GetCellValueAsDecimal("G2");
+                    DateTime tiempo_generado = sl.GetCellValueAsDateTime("E" + i);
                     int pedidos = sl.GetCellValueAsInt32("B" + i);
+                    int renglones = sl.GetCellValueAsInt32("F" + i);
                     sl.SetCellValue("C" + i, current_importe + imp);
-                    sl.SetCellValue("F" + 2, current_importe + total);
+                    sl.SetCellValue("G" + 2, current_importe + total);
                     sl.SetCellValue("B" + i, pedidos + 1);
-                    total = sl.GetCellValueAsDecimal("F2");
+                    sl.SetCellValue("F" + i, current_renglones+renglones);
+                    total = sl.GetCellValueAsDecimal("G2");
                     double tiempo = sl.GetCellValueAsDouble("E" + i);
                     double tot = tiempo + diferencia.TotalMinutes;
 
@@ -149,15 +154,17 @@ namespace Reporte_de_Surtido
             }
             if (Encontrar == false)
             {
-                decimal total = sl.GetCellValueAsDecimal("F2");
+                decimal total = sl.GetCellValueAsDecimal("G2");
                 sl.SetCellValue("A" + i, current_surtidor);
                 decimal imp = sl.GetCellValueAsDecimal("C" + i);
                 sl.SetCellValue("C" + i, current_importe);
                 double tiempo = sl.GetCellValueAsDouble("E" + i);
                 double tot = tiempo + diferencia.TotalMinutes;
                 sl.SetCellValue("E" + i, tot);
-                sl.SetCellValue("F" + 2, current_importe + total);
-                total = sl.GetCellValueAsDecimal("F2");
+                int renglones = sl.GetCellValueAsInt32("F" + i);
+                sl.SetCellValue("F" + i, current_renglones + renglones);
+                sl.SetCellValue("G" + 2, current_importe + total);
+                total = sl.GetCellValueAsDecimal("G2");
                 int pedidos = sl.GetCellValueAsInt32("B" + i);
                 sl.SetCellValue("B" + i, pedidos + 1);
                 while (sl.HasCellValue("C" + j))
@@ -303,8 +310,7 @@ namespace Reporte_de_Surtido
                         command.ExecuteNonQuery();
 
                         // Obtener el valor de retorno NUM_RENGLONES
-                        int NUM_RENGLONES = (int)paramNUM_RENGLONES.Value;
-                        MessageBox.Show(NUM_RENGLONES.ToString());
+                        Num_renglones = (int)paramNUM_RENGLONES.Value;
 
                         // Hacer algo con el valor de retorno NUM_RENGLONES
                         /*
@@ -385,7 +391,7 @@ namespace Reporte_de_Surtido
                 {
                     i++;
                 }
-                int[] columnas = { 1, 2, 3, 4, 5, 6, 7, 8 };
+                int[] columnas = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 foreach (int columna in columnas)
                 {
                     sl.SetColumnWidth(columna, 30);
@@ -395,7 +401,8 @@ namespace Reporte_de_Surtido
                 sl.SetCellValue("C" + i, Cb_Surtidor.Text);
                 sl.SetCellValue("D" + i, Inicio);
                 sl.SetCellValue("E" + i, oficial_importe);
-                sl.SetCellValue("H" + i, DateTime.Now.ToString(" yyyy-MM-dd"));
+                sl.SetCellValue("H" + i, Num_renglones);
+                sl.SetCellValue("I" + i, DateTime.Now.ToString(" yyyy-MM-dd"));
                 sl.SaveAs(path);
 
             }
@@ -413,8 +420,9 @@ namespace Reporte_de_Surtido
                 table.Columns.Add("Importe", typeof(decimal));
                 table.Columns.Add("Hora Fin", typeof(string));
                 table.Columns.Add("Duracion", typeof(string));
+                table.Columns.Add("Renglones", typeof(int));
                 table.Columns.Add("Fecha", typeof(string));
-                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "", DateTime.Now.ToString(" yyyy-MM-dd"));
+                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "",Num_renglones, DateTime.Now.ToString(" yyyy-MM-dd"));
                 oSLDocument.ImportDataTable(1, 1, table, true);
                 oSLDocument.SaveAs(path);
             }
@@ -475,6 +483,7 @@ namespace Reporte_de_Surtido
                             sl.SetCellValue("F" + i, DateTime.Now.ToLongTimeString());
                             current_importe = sl.GetCellValueAsDecimal(i, 5);
                             current_surtidor = sl.GetCellValueAsString(i, 3);
+                            current_renglones = sl.GetCellValueAsInt32(i, 8);
                             string inicioStr = sl.GetCellValueAsString("D" + i); // Obtener el valor de la celda como cadena
                             string finStr = sl.GetCellValueAsString("F" + i); // Obtener el valor de la celda como cadena
                             DateTime inicio;
