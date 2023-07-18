@@ -105,27 +105,27 @@ namespace Reporte_de_Surtido
         void Promedio()
         {
             //string rutaArchivo = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
-            SLDocument sl = new SLDocument(path);
-            // Agregar una nueva hoja
-            sl.AddWorksheet("Promedio");
-            sl.SelectWorksheet("Promedio");
-            int[] columnas = { 1, 2, 3, 4, 5, 6 , 7};
-            foreach (int columna in columnas)
-            {
-                sl.SetColumnWidth(columna, 30);
-            }
-            sl.SetCellValue("A1", "SURTIDOR");
-            sl.SetCellValue("B1", "PEDIDOS SURTIDOS");
-            sl.SetCellValue("C1", "IMPORTE GENERADO");
-            sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
-            sl.SetCellValue("E1", "MINUTOS EN SURTIR");
-            sl.SetCellValue("F1", "RENGLONES SURTIDOS");
-            sl.SetCellValue("G1", "IMPORTE TOTAL");
-            int i = 2;
-            int j = 2;
-            bool Encontrar = false;
-            while (sl.HasCellValue("A" + i))
-            {
+                SLDocument sl = new SLDocument(path);
+                // Agregar una nueva hoja
+                sl.AddWorksheet("Promedio");
+                sl.SelectWorksheet("Promedio");
+                int[] columnas = { 1, 2, 3, 4, 5, 6 , 7};
+                foreach (int columna in columnas)
+                {
+                    sl.SetColumnWidth(columna, 30);
+                }
+                sl.SetCellValue("A1", "SURTIDOR");
+                sl.SetCellValue("B1", "PEDIDOS SURTIDOS");
+                sl.SetCellValue("C1", "IMPORTE GENERADO");
+                sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
+                sl.SetCellValue("E1", "MINUTOS EN SURTIR");
+                sl.SetCellValue("F1", "RENGLONES SURTIDOS");
+                sl.SetCellValue("G1", "IMPORTE TOTAL");
+                int i = 2;
+                int j = 2;
+                bool Encontrar = false;
+                while (sl.HasCellValue("A" + i))
+                {
                 if (sl.GetCellValueAsString(i, 1) == current_surtidor)
                 {
                     Encontrar = true;
