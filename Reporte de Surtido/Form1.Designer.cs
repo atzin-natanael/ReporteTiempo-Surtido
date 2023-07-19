@@ -24,6 +24,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             FlowLayoutPanel1 = new FlowLayoutPanel();
             Pb_Cerrar = new PictureBox();
+            Btn_Max = new PictureBox();
             Pb_Min = new PictureBox();
             label1 = new Label();
             TabIniciar = new TabControl();
@@ -34,6 +35,7 @@
             Surtidor = new DataGridViewTextBoxColumn();
             HoraInicio = new DataGridViewTextBoxColumn();
             Importe = new DataGridViewTextBoxColumn();
+            Renglones = new DataGridViewTextBoxColumn();
             BtnIniciar = new Button();
             TxtFolio = new TextBox();
             pictureBox1 = new PictureBox();
@@ -45,6 +47,7 @@
             TxtFolio2 = new TextBox();
             FlowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Btn_Max).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Min).BeginInit();
             TabIniciar.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -56,14 +59,16 @@
             // 
             // FlowLayoutPanel1
             // 
-            FlowLayoutPanel1.Anchor = AnchorStyles.Top;
+            FlowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             FlowLayoutPanel1.BackColor = Color.SteelBlue;
             FlowLayoutPanel1.Controls.Add(Pb_Cerrar);
+            FlowLayoutPanel1.Controls.Add(Btn_Max);
             FlowLayoutPanel1.Controls.Add(Pb_Min);
+            FlowLayoutPanel1.Cursor = Cursors.SizeAll;
             FlowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
-            FlowLayoutPanel1.Location = new Point(-3, 1);
+            FlowLayoutPanel1.Location = new Point(-3, -2);
             FlowLayoutPanel1.Name = "FlowLayoutPanel1";
-            FlowLayoutPanel1.Size = new Size(1012, 41);
+            FlowLayoutPanel1.Size = new Size(1012, 44);
             FlowLayoutPanel1.TabIndex = 0;
             FlowLayoutPanel1.MouseDown += FlowLayoutPanel1_MouseDown;
             FlowLayoutPanel1.MouseMove += FlowLayoutPanel1_MouseMove;
@@ -83,13 +88,27 @@
             Pb_Cerrar.TabStop = false;
             Pb_Cerrar.Click += Pb_Cerrar_Click;
             // 
+            // Btn_Max
+            // 
+            Btn_Max.Anchor = AnchorStyles.Top;
+            Btn_Max.BackColor = Color.SteelBlue;
+            Btn_Max.Cursor = Cursors.Hand;
+            Btn_Max.Image = (Image)resources.GetObject("Btn_Max.Image");
+            Btn_Max.Location = new Point(923, 3);
+            Btn_Max.Name = "Btn_Max";
+            Btn_Max.Size = new Size(33, 31);
+            Btn_Max.SizeMode = PictureBoxSizeMode.StretchImage;
+            Btn_Max.TabIndex = 15;
+            Btn_Max.TabStop = false;
+            Btn_Max.Click += Btn_Max_Click;
+            // 
             // Pb_Min
             // 
             Pb_Min.Anchor = AnchorStyles.Top;
             Pb_Min.BackColor = Color.SteelBlue;
             Pb_Min.Cursor = Cursors.Hand;
             Pb_Min.Image = (Image)resources.GetObject("Pb_Min.Image");
-            Pb_Min.Location = new Point(923, 3);
+            Pb_Min.Location = new Point(884, 3);
             Pb_Min.Name = "Pb_Min";
             Pb_Min.Size = new Size(33, 31);
             Pb_Min.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -99,7 +118,7 @@
             // 
             // label1
             // 
-            label1.Anchor = AnchorStyles.Top;
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("SPIDER-MAN:ECLIPSE", 11.999999F, FontStyle.Regular, GraphicsUnit.Point);
@@ -113,12 +132,14 @@
             // 
             // TabIniciar
             // 
+            TabIniciar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             TabIniciar.Controls.Add(tabPage1);
             TabIniciar.Controls.Add(tabPage2);
             TabIniciar.Location = new Point(12, 48);
             TabIniciar.Name = "TabIniciar";
             TabIniciar.SelectedIndex = 0;
             TabIniciar.Size = new Size(984, 669);
+            TabIniciar.SizeMode = TabSizeMode.Fixed;
             TabIniciar.TabIndex = 1;
             TabIniciar.SelectedIndexChanged += TabIniciar_SelectedIndexChanged;
             // 
@@ -142,6 +163,7 @@
             // 
             // Check_mantener
             // 
+            Check_mantener.Anchor = AnchorStyles.Top;
             Check_mantener.AutoSize = true;
             Check_mantener.Location = new Point(280, 140);
             Check_mantener.Name = "Check_mantener";
@@ -158,13 +180,13 @@
             Data_Kardex.AllowUserToOrderColumns = true;
             Data_Kardex.AllowUserToResizeColumns = false;
             Data_Kardex.AllowUserToResizeRows = false;
-            Data_Kardex.Anchor = AnchorStyles.Top;
+            Data_Kardex.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Data_Kardex.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             Data_Kardex.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             Data_Kardex.BackgroundColor = Color.DimGray;
             Data_Kardex.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             Data_Kardex.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            Data_Kardex.Columns.AddRange(new DataGridViewColumn[] { Folio, Surtidor, HoraInicio, Importe });
+            Data_Kardex.Columns.AddRange(new DataGridViewColumn[] { Folio, Surtidor, HoraInicio, Importe, Renglones });
             Data_Kardex.EditMode = DataGridViewEditMode.EditProgrammatically;
             Data_Kardex.EnableHeadersVisualStyles = false;
             Data_Kardex.GridColor = Color.Blue;
@@ -184,7 +206,7 @@
             Folio.HeaderText = "Folio";
             Folio.Name = "Folio";
             Folio.ReadOnly = true;
-            Folio.Width = 150;
+            Folio.Width = 120;
             // 
             // Surtidor
             // 
@@ -192,7 +214,7 @@
             Surtidor.HeaderText = "Surtidor";
             Surtidor.Name = "Surtidor";
             Surtidor.ReadOnly = true;
-            Surtidor.Width = 400;
+            Surtidor.Width = 320;
             // 
             // HoraInicio
             // 
@@ -200,13 +222,23 @@
             HoraInicio.HeaderText = "Hora de Inicio";
             HoraInicio.Name = "HoraInicio";
             HoraInicio.ReadOnly = true;
-            HoraInicio.Width = 200;
+            HoraInicio.Width = 180;
             // 
             // Importe
             // 
+            Importe.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             Importe.HeaderText = "Importe";
             Importe.Name = "Importe";
             Importe.ReadOnly = true;
+            Importe.Width = 150;
+            // 
+            // Renglones
+            // 
+            Renglones.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Renglones.HeaderText = "Renglones";
+            Renglones.Name = "Renglones";
+            Renglones.ReadOnly = true;
+            Renglones.Width = 115;
             // 
             // BtnIniciar
             // 
@@ -288,7 +320,7 @@
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.Top;
+            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("SPIDER-MAN:ECLIPSE", 11.999999F, FontStyle.Regular, GraphicsUnit.Point);
@@ -356,6 +388,7 @@
             Load += Form1_Load;
             FlowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Btn_Max).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Min).EndInit();
             TabIniciar.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
@@ -382,12 +415,14 @@
         private DataGridView Data_Kardex;
         private Button BtnTerminar;
         private TextBox TxtFolio2;
+        private Label label2;
+        private CheckBox Check_mantener;
+        private PictureBox Pb_Min;
+        private PictureBox Btn_Max;
         private DataGridViewTextBoxColumn Folio;
         private DataGridViewTextBoxColumn Surtidor;
         private DataGridViewTextBoxColumn HoraInicio;
         private DataGridViewTextBoxColumn Importe;
-        private Label label2;
-        private CheckBox Check_mantener;
-        private PictureBox Pb_Min;
+        private DataGridViewTextBoxColumn Renglones;
     }
 }

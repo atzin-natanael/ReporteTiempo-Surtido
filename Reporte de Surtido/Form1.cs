@@ -105,27 +105,27 @@ namespace Reporte_de_Surtido
         void Promedio()
         {
             //string rutaArchivo = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
-                SLDocument sl = new SLDocument(path);
-                // Agregar una nueva hoja
-                sl.AddWorksheet("Promedio");
-                sl.SelectWorksheet("Promedio");
-                int[] columnas = { 1, 2, 3, 4, 5, 6 , 7};
-                foreach (int columna in columnas)
-                {
-                    sl.SetColumnWidth(columna, 30);
-                }
-                sl.SetCellValue("A1", "SURTIDOR");
-                sl.SetCellValue("B1", "PEDIDOS SURTIDOS");
-                sl.SetCellValue("C1", "IMPORTE GENERADO");
-                sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
-                sl.SetCellValue("E1", "MINUTOS EN SURTIR");
-                sl.SetCellValue("F1", "RENGLONES SURTIDOS");
-                sl.SetCellValue("G1", "IMPORTE TOTAL");
-                int i = 2;
-                int j = 2;
-                bool Encontrar = false;
-                while (sl.HasCellValue("A" + i))
-                {
+            SLDocument sl = new SLDocument(path);
+            // Agregar una nueva hoja
+            sl.AddWorksheet("Promedio");
+            sl.SelectWorksheet("Promedio");
+            int[] columnas = { 1, 2, 3, 4, 5, 6, 7 };
+            foreach (int columna in columnas)
+            {
+                sl.SetColumnWidth(columna, 30);
+            }
+            sl.SetCellValue("A1", "SURTIDOR");
+            sl.SetCellValue("B1", "PEDIDOS SURTIDOS");
+            sl.SetCellValue("C1", "IMPORTE GENERADO");
+            sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
+            sl.SetCellValue("E1", "MINUTOS EN SURTIR");
+            sl.SetCellValue("F1", "RENGLONES SURTIDOS");
+            sl.SetCellValue("G1", "IMPORTE TOTAL");
+            int i = 2;
+            int j = 2;
+            bool Encontrar = false;
+            while (sl.HasCellValue("A" + i))
+            {
                 if (sl.GetCellValueAsString(i, 1) == current_surtidor)
                 {
                     Encontrar = true;
@@ -137,7 +137,7 @@ namespace Reporte_de_Surtido
                     sl.SetCellValue("C" + i, current_importe + imp);
                     sl.SetCellValue("G" + 2, current_importe + total);
                     sl.SetCellValue("B" + i, pedidos + 1);
-                    sl.SetCellValue("F" + i, current_renglones+renglones);
+                    sl.SetCellValue("F" + i, current_renglones + renglones);
                     total = sl.GetCellValueAsDecimal("G2");
                     double tiempo = sl.GetCellValueAsDouble("E" + i);
                     double tot = tiempo + diferencia.TotalMinutes;
@@ -190,22 +190,6 @@ namespace Reporte_de_Surtido
         {
             if (TxtFolio.Text != string.Empty && Cb_Surtidor.Text != string.Empty)
             {
-                /*
-                foreach (DataGridViewRow fila in Data_Kardex.Rows)
-                {
-                    // Obtener el valor de la columna deseada en cada fila
-                    string valorCelda = fila.Cells["Folio"].Value.ToString();
-                    if (valorCelda == TxtFolio.Text)
-                    {
-                        // El dato ya existe en el DataGridView
-                        MessageBox.Show("Ese pedido ya está iniciado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        TxtFolio.Text = string.Empty;
-                        Cb_Surtidor.Text = "";
-                        TxtFolio.Focus();
-                        return; // Salir del bucle
-                    }
-                }*/
-                //string path = "C:\\Datos_Surtido\\Registro de Surtidores" + diaSemana + DateTime.Now.ToString(" yyyy-MM-dd") + ".xlsx";
                 bool fileExist = File.Exists(path);
                 if (fileExist)
                 {
@@ -311,54 +295,12 @@ namespace Reporte_de_Surtido
 
                         // Obtener el valor de retorno NUM_RENGLONES
                         Num_renglones = (int)paramNUM_RENGLONES.Value;
-
-                        // Hacer algo con el valor de retorno NUM_RENGLONES
-                        /*
-                        FbCommand command7 = new FbCommand("CALC_TOTALES_DOCTO_VE", con);
-                        command7.CommandType = CommandType.StoredProcedure;
-                        command7.ExecuteNonQuery();
-                        DataTable dt = new DataTable();
-                        dt.Load(command7.ExecuteReader());
-                        MessageBox.Show(dt.ToString());
-                        */
-                        /*
-                         string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
-                         //string query = "SELECT * FROM DOCTOS_VE_DET ORDER BY DOCTO_VE_ID DESC";
-                         FbCommand command = new FbCommand(query, con);
-                         // Objeto para leer los datos obtenidos
-                         FbDataReader reader = command.ExecuteReader();
-                         encontrado = false;
-                         while (reader.Read())
-                         {
-                             string columnaid = reader.GetString(1);
-                             if (columnaid == oficial_id)
-                             {
-                                 MessageBox.Show("encontrado");
-                                 while (columnaid == oficial_id)
-                                 {
-                                     oficial_contador = oficial_contador + 1;
-                                     //MessageBox.Show(oficial_contador.ToString());
-                                     // Mover al siguiente registro
-                                     if (!reader.Read())
-                                     {
-                                         MessageBox.Show("no encontrado");
-                                         break; // Salir del bucle si no hay más registros
-                                     }
-                                     columnaid = reader.GetString(1); // Actualizar el valor de columnaid
-                                 }
-                             MessageBox.Show(oficial_contador.ToString());
-                             break;
-                             }
-                         }
-                         MessageBox.Show("No encontrado");
-                         reader.Close();
-                         */
                         Excel();
                         // Obtén acceso a la colección de filas del control Data_Kardex
                         DataGridViewRowCollection rows = Data_Kardex.Rows;
 
                         // Agrega una nueva fila y especifica los valores de las celdas
-                        rows.Add(TxtFolio.Text, oficial_surtidor, Inicio, oficial_importe);
+                        rows.Add(TxtFolio.Text, oficial_surtidor, Inicio, oficial_importe, Num_renglones);
 
                         TxtFolio.Text = string.Empty;
                         if (!Check_mantener.Checked)
@@ -422,7 +364,7 @@ namespace Reporte_de_Surtido
                 table.Columns.Add("Duracion", typeof(string));
                 table.Columns.Add("Renglones", typeof(int));
                 table.Columns.Add("Fecha", typeof(string));
-                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "",Num_renglones, DateTime.Now.ToString(" yyyy-MM-dd"));
+                table.Rows.Add(1, TxtFolio.Text, Cb_Surtidor.Text, Inicio, oficial_importe, "", "", Num_renglones, DateTime.Now.ToString(" yyyy-MM-dd"));
                 oSLDocument.ImportDataTable(1, 1, table, true);
                 oSLDocument.SaveAs(path);
             }
@@ -592,7 +534,7 @@ namespace Reporte_de_Surtido
                 {
                     if (sl.GetCellValueAsString(i, 6) == string.Empty)
                     {
-                        rows.Add(sl.GetCellValueAsString(i, 2), sl.GetCellValueAsString(i, 3), sl.GetCellValueAsString(i, 4), sl.GetCellValueAsDecimal(i, 5));
+                        rows.Add(sl.GetCellValueAsString(i, 2), sl.GetCellValueAsString(i, 3), sl.GetCellValueAsString(i, 4), sl.GetCellValueAsDecimal(i, 5), sl.GetCellValueAsInt32(i, 8));
                     }
                 }
             }
@@ -641,6 +583,23 @@ namespace Reporte_de_Surtido
         private void Pb_Min_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void Btn_Max_Click(object sender, EventArgs e)
+        {
+            // Si la ventana está maximizada, restaurarla a su estado normal
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+            else // Si la ventana no está maximizada, maximizarla
+            {
+                this.WindowState = FormWindowState.Maximized;
+                Data_Kardex.Columns["Surtidor"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+                Data_Kardex.Columns["Folio"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+                Data_Kardex.Columns["Importe"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+                Data_Kardex.Columns["Renglones"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            }
         }
     }
 }
