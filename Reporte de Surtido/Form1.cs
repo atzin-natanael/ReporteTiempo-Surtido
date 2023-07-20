@@ -542,9 +542,22 @@ namespace Reporte_de_Surtido
 
         private void Check_mantener_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Check_mantener.Checked)
+            if (Check_mantener.Checked && TxtFolio.Text != string.Empty)
+            {
+                Cb_Surtidor.Focus();
+            }
+            else if (Check_mantener.Checked && TxtFolio.Text == string.Empty)
+            {
+                TxtFolio.Focus();
+            }
+            else if (!Check_mantener.Checked && TxtFolio.Text != string.Empty)
+            {
+                Cb_Surtidor.Focus();
+            }
+            else if (!Check_mantener.Checked && TxtFolio.Text == string.Empty)
             {
                 Cb_Surtidor.Text = "";
+                TxtFolio.Focus();
             }
         }
 
@@ -600,6 +613,15 @@ namespace Reporte_de_Surtido
                 Data_Kardex.Columns["Importe"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
                 Data_Kardex.Columns["Renglones"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
             }
+        }
+        private void Pb_Cerrar_MouseLeave(object sender, EventArgs e)
+        {
+            Pb_Cerrar.BackColor = System.Drawing.Color.SteelBlue;
+        }
+
+        private void Pb_Cerrar_MouseEnter(object sender, EventArgs e)
+        {
+            Pb_Cerrar.BackColor = System.Drawing.Color.Red;
         }
     }
 }

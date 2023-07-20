@@ -87,6 +87,8 @@
             Pb_Cerrar.TabIndex = 0;
             Pb_Cerrar.TabStop = false;
             Pb_Cerrar.Click += Pb_Cerrar_Click;
+            Pb_Cerrar.MouseEnter += Pb_Cerrar_MouseEnter;
+            Pb_Cerrar.MouseLeave += Pb_Cerrar_MouseLeave;
             // 
             // Btn_Max
             // 
@@ -383,8 +385,10 @@
             Controls.Add(TabIniciar);
             Controls.Add(FlowLayoutPanel1);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
+            WindowState = FormWindowState.Maximized;
             Load += Form1_Load;
             FlowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).EndInit();

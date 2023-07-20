@@ -7,7 +7,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Images\icon_pc.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Images\icon_pc.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="9.1.1" />
