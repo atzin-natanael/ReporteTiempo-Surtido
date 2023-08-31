@@ -29,6 +29,8 @@
             label1 = new Label();
             TabIniciar = new TabControl();
             tabPage1 = new TabPage();
+            label3 = new Label();
+            Pb_Add = new PictureBox();
             Check_mantener = new CheckBox();
             Data_Kardex = new DataGridView();
             Folio = new DataGridViewTextBoxColumn();
@@ -45,16 +47,24 @@
             pictureBox2 = new PictureBox();
             BtnTerminar = new Button();
             TxtFolio2 = new TextBox();
+            tabPage3 = new TabPage();
+            pictureBox3 = new PictureBox();
+            Btn_Buscar = new Button();
+            Txt_Buscar = new TextBox();
+            label4 = new Label();
             FlowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Pb_Cerrar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Btn_Max).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Min).BeginInit();
             TabIniciar.SuspendLayout();
             tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Pb_Add).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Data_Kardex).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             SuspendLayout();
             // 
             // FlowLayoutPanel1
@@ -137,6 +147,7 @@
             TabIniciar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             TabIniciar.Controls.Add(tabPage1);
             TabIniciar.Controls.Add(tabPage2);
+            TabIniciar.Controls.Add(tabPage3);
             TabIniciar.Location = new Point(12, 48);
             TabIniciar.Name = "TabIniciar";
             TabIniciar.SelectedIndex = 0;
@@ -148,6 +159,9 @@
             // tabPage1
             // 
             tabPage1.BackColor = Color.DimGray;
+            tabPage1.Controls.Add(label4);
+            tabPage1.Controls.Add(label3);
+            tabPage1.Controls.Add(Pb_Add);
             tabPage1.Controls.Add(Check_mantener);
             tabPage1.Controls.Add(Data_Kardex);
             tabPage1.Controls.Add(BtnIniciar);
@@ -163,6 +177,30 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Iniciar";
             // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Top;
+            label3.AutoSize = true;
+            label3.Location = new Point(3, 16);
+            label3.Name = "label3";
+            label3.Size = new Size(156, 18);
+            label3.TabIndex = 16;
+            label3.Text = "Agregar Surtidor";
+            label3.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Pb_Add
+            // 
+            Pb_Add.Anchor = AnchorStyles.Top;
+            Pb_Add.Cursor = Cursors.Hand;
+            Pb_Add.Image = (Image)resources.GetObject("Pb_Add.Image");
+            Pb_Add.Location = new Point(49, 49);
+            Pb_Add.Name = "Pb_Add";
+            Pb_Add.Size = new Size(62, 61);
+            Pb_Add.SizeMode = PictureBoxSizeMode.StretchImage;
+            Pb_Add.TabIndex = 15;
+            Pb_Add.TabStop = false;
+            Pb_Add.Click += Pb_Add_Click;
+            // 
             // Check_mantener
             // 
             Check_mantener.Anchor = AnchorStyles.Top;
@@ -173,6 +211,7 @@
             Check_mantener.TabIndex = 14;
             Check_mantener.Text = "Mantener nombre del surtidor";
             Check_mantener.UseVisualStyleBackColor = true;
+            Check_mantener.Visible = false;
             Check_mantener.CheckedChanged += Check_mantener_CheckedChanged;
             // 
             // Data_Kardex
@@ -204,43 +243,39 @@
             // 
             // Folio
             // 
-            Folio.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Folio.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Folio.HeaderText = "Folio";
             Folio.Name = "Folio";
             Folio.ReadOnly = true;
-            Folio.Width = 120;
             // 
             // Surtidor
             // 
-            Surtidor.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Surtidor.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             Surtidor.HeaderText = "Surtidor";
             Surtidor.Name = "Surtidor";
             Surtidor.ReadOnly = true;
-            Surtidor.Width = 320;
+            Surtidor.Width = 104;
             // 
             // HoraInicio
             // 
-            HoraInicio.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            HoraInicio.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             HoraInicio.HeaderText = "Hora de Inicio";
             HoraInicio.Name = "HoraInicio";
             HoraInicio.ReadOnly = true;
-            HoraInicio.Width = 180;
             // 
             // Importe
             // 
-            Importe.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Importe.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Importe.HeaderText = "Importe";
             Importe.Name = "Importe";
             Importe.ReadOnly = true;
-            Importe.Width = 150;
             // 
             // Renglones
             // 
-            Renglones.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Renglones.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Renglones.HeaderText = "Renglones";
             Renglones.Name = "Renglones";
             Renglones.ReadOnly = true;
-            Renglones.Width = 115;
             // 
             // BtnIniciar
             // 
@@ -378,6 +413,73 @@
             TxtFolio2.TextAlign = HorizontalAlignment.Center;
             TxtFolio2.KeyDown += TxtFolio2_KeyDown;
             // 
+            // tabPage3
+            // 
+            tabPage3.BackColor = Color.DimGray;
+            tabPage3.Controls.Add(pictureBox3);
+            tabPage3.Controls.Add(Btn_Buscar);
+            tabPage3.Controls.Add(Txt_Buscar);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(3);
+            tabPage3.Size = new Size(976, 641);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Buscar";
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Anchor = AnchorStyles.Top;
+            pictureBox3.BackColor = Color.Transparent;
+            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
+            pictureBox3.Location = new Point(265, 6);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(445, 113);
+            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox3.TabIndex = 20;
+            pictureBox3.TabStop = false;
+            // 
+            // Btn_Buscar
+            // 
+            Btn_Buscar.Anchor = AnchorStyles.Top;
+            Btn_Buscar.BackColor = Color.SteelBlue;
+            Btn_Buscar.Cursor = Cursors.Hand;
+            Btn_Buscar.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            Btn_Buscar.ForeColor = Color.Black;
+            Btn_Buscar.Location = new Point(556, 134);
+            Btn_Buscar.Name = "Btn_Buscar";
+            Btn_Buscar.Size = new Size(184, 68);
+            Btn_Buscar.TabIndex = 19;
+            Btn_Buscar.Text = "Buscar";
+            Btn_Buscar.UseVisualStyleBackColor = false;
+            Btn_Buscar.Click += Btn_Buscar_Click;
+            // 
+            // Txt_Buscar
+            // 
+            Txt_Buscar.Anchor = AnchorStyles.Top;
+            Txt_Buscar.BackColor = Color.White;
+            Txt_Buscar.CharacterCasing = CharacterCasing.Upper;
+            Txt_Buscar.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            Txt_Buscar.ForeColor = Color.Black;
+            Txt_Buscar.Location = new Point(294, 166);
+            Txt_Buscar.MaxLength = 9;
+            Txt_Buscar.Multiline = true;
+            Txt_Buscar.Name = "Txt_Buscar";
+            Txt_Buscar.PlaceholderText = "FOLIO";
+            Txt_Buscar.Size = new Size(219, 36);
+            Txt_Buscar.TabIndex = 18;
+            Txt_Buscar.TextAlign = HorizontalAlignment.Center;
+            Txt_Buscar.KeyDown += Txt_Buscar_KeyDown;
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top;
+            label4.AutoSize = true;
+            label4.Location = new Point(849, 6);
+            label4.Name = "label4";
+            label4.Size = new Size(124, 18);
+            label4.TabIndex = 17;
+            label4.Text = "Version 1.0.1";
+            // 
             // Form1
             // 
             BackColor = Color.DimGray;
@@ -397,11 +499,15 @@
             TabIniciar.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)Pb_Add).EndInit();
             ((System.ComponentModel.ISupportInitialize)Data_Kardex).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ResumeLayout(false);
         }
 
@@ -423,10 +529,17 @@
         private CheckBox Check_mantener;
         private PictureBox Pb_Min;
         private PictureBox Btn_Max;
+        private PictureBox Pb_Add;
+        private Label label3;
+        private TabPage tabPage3;
+        private PictureBox pictureBox3;
+        private Button Btn_Buscar;
+        private TextBox Txt_Buscar;
         private DataGridViewTextBoxColumn Folio;
         private DataGridViewTextBoxColumn Surtidor;
         private DataGridViewTextBoxColumn HoraInicio;
         private DataGridViewTextBoxColumn Importe;
         private DataGridViewTextBoxColumn Renglones;
+        private Label label4;
     }
 }

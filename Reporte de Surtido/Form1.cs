@@ -33,6 +33,9 @@ namespace Reporte_de_Surtido
         DateTime suma;
         string path;
         int Num_renglones;
+        Agregar Add;
+        List<string> nombresArray = new();
+        private List<string> nombresValor = new() { };
         public Form1()
         {
             InitializeComponent();
@@ -40,6 +43,7 @@ namespace Reporte_de_Surtido
             Leer_Datos();
             TxtFolio.Select();
             Cb_Surtidor.SelectedIndex = -1;
+            Add = new Agregar();
 
         }
         public void CrearExcel()
@@ -91,15 +95,29 @@ namespace Reporte_de_Surtido
         }
         public void Leer_Datos()
         {
-            string filePath = "C:\\Datos_Surtido\\Claves.txt";
+            nombresArray.Clear();
+            nombresValor.Clear();
+            string filePath = "\\\\192.168.0.2\\C$\\clavesSurtido\\Claves.xlsx";
 
             // Leer el contenido del archivo y asignarlo a una matriz de cadenas
-            string[] nombresArray = File.ReadAllLines(filePath);
-            nombres = new List<string>(nombresArray);
-            Cb_Surtidor.DataSource = nombres;
-            Cb_Surtidor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            using (SLDocument documento = new SLDocument(filePath))
+            {
+                int filas = documento.GetWorksheetStatistics().NumberOfRows;
+                for (int i = 2; i < filas + 1; ++i)
+                {
+                    string temp_name = documento.GetCellValueAsString("A" + i);
+                    string temp_value = documento.GetCellValueAsString("B" + i);
+                    string temp_status = documento.GetCellValueAsString("C" + i);
+                    string name = temp_name + " " + temp_value;
+                    nombresArray.Add(name);
+                    nombresValor.Add(temp_status);
+                }
+                documento.CloseWithoutSaving();
+            }
+            Cb_Surtidor.DataSource = nombresArray;
+            Cb_Surtidor.AutoCompleteMode = AutoCompleteMode.Append;
             Cb_Surtidor.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            Cb_Surtidor.AutoCompleteCustomSource.AddRange(nombres.ToArray());
+            Cb_Surtidor.AutoCompleteCustomSource.AddRange(nombresArray.ToArray());
             Cb_Surtidor.Text = "";
         }
         void Promedio()
@@ -109,7 +127,7 @@ namespace Reporte_de_Surtido
             // Agregar una nueva hoja
             sl.AddWorksheet("Promedio");
             sl.SelectWorksheet("Promedio");
-            int[] columnas = { 1, 2, 3, 4, 5, 6, 7 };
+            int[] columnas = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             foreach (int columna in columnas)
             {
                 sl.SetColumnWidth(columna, 30);
@@ -120,7 +138,9 @@ namespace Reporte_de_Surtido
             sl.SetCellValue("D1", "PORCENTAJE DE IMPORTE");
             sl.SetCellValue("E1", "MINUTOS EN SURTIR");
             sl.SetCellValue("F1", "RENGLONES SURTIDOS");
-            sl.SetCellValue("G1", "IMPORTE TOTAL");
+            sl.SetCellValue("G1", "PORCENTAJE DE RENGLONES");
+            sl.SetCellValue("H1", "IMPORTE TOTAL");
+            sl.SetCellValue("I1", "RENGLONES TOTALES");
             int i = 2;
             int j = 2;
             bool Encontrar = false;
@@ -130,15 +150,18 @@ namespace Reporte_de_Surtido
                 {
                     Encontrar = true;
                     decimal imp = sl.GetCellValueAsDecimal("C" + i);
-                    decimal total = sl.GetCellValueAsDecimal("G2");
+                    decimal total_renglones = sl.GetCellValueAsDecimal("I2");
+                    decimal total = sl.GetCellValueAsDecimal("H2");
                     DateTime tiempo_generado = sl.GetCellValueAsDateTime("E" + i);
                     int pedidos = sl.GetCellValueAsInt32("B" + i);
-                    int renglones = sl.GetCellValueAsInt32("F" + i);
+                    decimal renglones = sl.GetCellValueAsDecimal("F" + i);
                     sl.SetCellValue("C" + i, current_importe + imp);
-                    sl.SetCellValue("G" + 2, current_importe + total);
+                    sl.SetCellValue("H" + 2, current_importe + total);
                     sl.SetCellValue("B" + i, pedidos + 1);
                     sl.SetCellValue("F" + i, current_renglones + renglones);
-                    total = sl.GetCellValueAsDecimal("G2");
+                    sl.SetCellValue("I" + 2, current_renglones + total_renglones);
+                    total = sl.GetCellValueAsDecimal("H2");
+                    total_renglones = sl.GetCellValueAsDecimal("I2");
                     double tiempo = sl.GetCellValueAsDouble("E" + i);
                     double tot = tiempo + diferencia.TotalMinutes;
 
@@ -147,6 +170,8 @@ namespace Reporte_de_Surtido
                     {
                         decimal temp_importe = sl.GetCellValueAsDecimal("C" + j);
                         sl.SetCellValue("D" + j, 100 * (temp_importe / total));
+                        int temp_renglones = sl.GetCellValueAsInt32("F" + j);
+                        sl.SetCellValue("G" + j, 100 * (temp_renglones / total_renglones));
                         j++;
                     }
                 }
@@ -154,23 +179,28 @@ namespace Reporte_de_Surtido
             }
             if (Encontrar == false)
             {
-                decimal total = sl.GetCellValueAsDecimal("G2");
+                decimal total = sl.GetCellValueAsDecimal("H2");
+                decimal total_renglones = sl.GetCellValueAsInt32("I2");
                 sl.SetCellValue("A" + i, current_surtidor);
                 decimal imp = sl.GetCellValueAsDecimal("C" + i);
                 sl.SetCellValue("C" + i, current_importe);
                 double tiempo = sl.GetCellValueAsDouble("E" + i);
                 double tot = tiempo + diferencia.TotalMinutes;
                 sl.SetCellValue("E" + i, tot);
-                int renglones = sl.GetCellValueAsInt32("F" + i);
+                decimal renglones = sl.GetCellValueAsDecimal("F" + i);
                 sl.SetCellValue("F" + i, current_renglones + renglones);
-                sl.SetCellValue("G" + 2, current_importe + total);
-                total = sl.GetCellValueAsDecimal("G2");
+                sl.SetCellValue("I" + 2, current_renglones + total_renglones);
+                sl.SetCellValue("H" + 2, current_importe + total);
+                total = sl.GetCellValueAsDecimal("H2");
+                total_renglones = sl.GetCellValueAsDecimal("I2");
                 int pedidos = sl.GetCellValueAsInt32("B" + i);
                 sl.SetCellValue("B" + i, pedidos + 1);
                 while (sl.HasCellValue("C" + j))
                 {
                     decimal temp_importe = sl.GetCellValueAsDecimal("C" + j);
                     sl.SetCellValue("D" + j, 100 * (temp_importe / total));
+                    decimal temp_renglones = sl.GetCellValueAsInt32("F" + j);
+                    sl.SetCellValue("G" + j, 100 * (temp_renglones / total_renglones));
                     j++;
 
                 }
@@ -310,7 +340,9 @@ namespace Reporte_de_Surtido
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show("Error de conexión, vuelve a intentar o contacta a 06", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     MessageBox.Show(ex.ToString());
+                    return;
                 }
             }
             else
@@ -468,7 +500,16 @@ namespace Reporte_de_Surtido
                         sl.SetColumnWidth(columna, 30);
                     }
                     sl.SaveAs(path);
-                    Promedio();
+                    if (nombresArray.Contains(Cb_Surtidor.Text))
+                    {
+                        int posicion = nombresArray.FindIndex(nombresArray => nombresArray.Contains(Cb_Surtidor.Text));
+                        if (nombresValor[posicion] == "S")
+                        {
+                            Promedio();
+                        }
+                        else
+                            return;
+                    }
                 }
                 else if (!fileExist)
                 {
@@ -577,7 +618,7 @@ namespace Reporte_de_Surtido
 
         private void Cb_Surtidor_Leave(object sender, EventArgs e)
         {
-            if (!nombres.Contains(Cb_Surtidor.Text) && Cb_Surtidor.Text != "")
+            if (!nombresArray.Contains(Cb_Surtidor.Text) && Cb_Surtidor.Text != "")
             {
                 MessageBox.Show("Ese surtidor no está registrado", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Cb_Surtidor.Text = "";
@@ -608,10 +649,6 @@ namespace Reporte_de_Surtido
             else // Si la ventana no está maximizada, maximizarla
             {
                 this.WindowState = FormWindowState.Maximized;
-                Data_Kardex.Columns["Surtidor"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-                Data_Kardex.Columns["Folio"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-                Data_Kardex.Columns["Importe"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-                Data_Kardex.Columns["Renglones"].AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
             }
         }
         private void Pb_Cerrar_MouseLeave(object sender, EventArgs e)
@@ -622,6 +659,68 @@ namespace Reporte_de_Surtido
         private void Pb_Cerrar_MouseEnter(object sender, EventArgs e)
         {
             Pb_Cerrar.BackColor = System.Drawing.Color.Red;
+        }
+
+        private void Pb_Add_Click(object sender, EventArgs e)
+        {
+            Add.ShowDialog();
+            Leer_Datos();
+            TxtFolio.Focus();
+        }
+
+        private void Btn_Buscar_Click(object sender, EventArgs e)
+        {
+            if (Txt_Buscar.Text != string.Empty)
+            {
+                bool fileExist = File.Exists(path);
+                if (fileExist)
+                {
+                    bool encontrado = false;
+                    SLDocument sl = new(path);
+                    sl.SelectWorksheet("Reporte Surtido");
+                    int i = 2;
+                    while (sl.HasCellValue("B" + i))
+                    {
+                        if (Txt_Buscar.Text == sl.GetCellValueAsString("B" + i))
+                        {
+                            MessageBox.Show("Este pedido lo surtió: " + sl.GetCellValueAsString("C" + i), "Resultado");
+                            Txt_Buscar.Text = string.Empty;
+                            Txt_Buscar.Focus();
+                            encontrado = true;
+                            return;
+                        }
+                        i++;
+                    }
+                    if (encontrado == false)
+                    {
+                        MessageBox.Show("No se ha encontrado ese pedido", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Txt_Buscar.Text = string.Empty;
+                        Txt_Buscar.Focus();
+                        return;
+                    }
+                    sl.SaveAs(path);
+                }
+                else if (!fileExist)
+                {
+                    MessageBox.Show("Aún no has registrado un pedido", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Txt_Buscar.Text = string.Empty;
+                    Txt_Buscar.Focus();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Aún no has llenado todos los campos", "¡Espera!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Txt_Buscar.Focus();
+            }
+        }
+
+        private void Txt_Buscar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                Btn_Buscar.Focus();
+            }
         }
     }
 }
